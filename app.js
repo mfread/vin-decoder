@@ -216,6 +216,18 @@
     slots.appendChild(d);
   }
 
+  const VPIC_HREF = "https://vpic.nhtsa.dot.gov/api/";
+
+  function nhtsaAnchor() {
+    return `<a class="nhtsa-link" href="${VPIC_HREF}" target="_blank" rel="noopener noreferrer">NHTSA vPIC</a>`;
+  }
+
+  function setNhtsaNote(extra) {
+    nhtsaNote.innerHTML = extra
+      ? `${nhtsaAnchor()} — ${extra}`
+      : `${nhtsaAnchor()} Product Information Catalog.`;
+  }
+
   function normalize(value) {
     return value.toUpperCase().replace(/[^A-Z0-9]/g, "").slice(0, 17);
   }
@@ -244,7 +256,7 @@
     const year = String(opts[opts.length - 1]);
     const prior = opts.length > 1 ? opts[0] : null;
     const footnote = !knownMake(vin) && prior != null
-      ? `also ${prior} \u00b7 same letter on the previous 30-year cycle`
+      ? `also ${prior} · same letter on the previous 30-year cycle`
       : "";
     return { year, footnote };
   }
@@ -276,7 +288,7 @@
   function card(label, value) {
     const wrap = document.createElement("div");
     wrap.className = "card";
-    wrap.innerHTML = `<dt>${label}</dt><dd>${value || "\u2014"}</dd>`;
+    wrap.innerHTML = `<dt>${label}</dt><dd>${value || "—"}</dd>`;
     return wrap;
   }
 
@@ -306,7 +318,7 @@
         return pair(ch, COUNTRY[ch] || "Region unknown");
       case 1:
       case 2:
-        return pair(ch, index === 2 ? wmiName(vin.slice(0, 3)) : wmiName(vin.slice(0, 3)).split(" \u2014")[0]);
+        return pair(ch, index === 2 ? wmiName(vin.slice(0, 3)) : wmiName(vin.slice(0, 3)).split(" —")[0]);
       case 3:
         return pair(ch, tesla ? TESLA_LINE[ch] : "Manufacturer line code");
       case 4:
@@ -320,7 +332,7 @@
       case 8: {
         const expected = checkDigit(vin);
         const ok = expected === ch;
-        return pair(ch, ok ? "Valid (49 CFR 565)" : `Mismatch \u2014 expected ${expected}`);
+        return pair(ch, ok ? "Valid (49 CFR 565)" : `Mismatch — expected ${expected}`);
       }
       case 9:
         return pair(ch, yearLabel(vin));
@@ -342,7 +354,7 @@
     }
     const serial = document.createElement("tr");
     serial.className = "vis";
-    serial.innerHTML = `<td>12\u201317</td><td>${BREAKDOWN_LABEL[11]}</td><td>${positionMeaning(vin, 11)}</td>`;
+    serial.innerHTML = `<td>12–17</td><td>${BREAKDOWN_LABEL[11]}</td><td>${positionMeaning(vin, 11)}</td>`;
     breakdownBody.appendChild(serial);
   }
 
@@ -353,14 +365,14 @@
     const year = yearGuess(vin);
     const makeGuess = isTesla(vin)
       ? "Tesla"
-      : (WMI[wmi] || "").split("\u2014")[0].split("(")[0].trim() || "See WMI";
+      : (WMI[wmi] || "").split("—")[0].split("(")[0].trim() || "See WMI";
 
     hero.classList.remove("hidden");
     hero.innerHTML = `
       <article class="hero-card">
-        <p class="kicker">${wmi} \u00b7 ${COUNTRY[vin[0]] || "Region unknown"}</p>
+        <p class="kicker">${wmi} · ${COUNTRY[vin[0]] || "Region unknown"}</p>
         <h2>${makeGuess}${isTesla(vin) && TESLA_LINE[vin[3]] ? " " + TESLA_LINE[vin[3]] : ""}</h2>
-        <p class="sub">${wmiName(wmi)} \u00b7 model year code ${vin[9]} \u2192 ${year}${yearInfo(vin).footnote ? ` <span class=\"year-note\">${yearInfo(vin).footnote}</span>` : ""} \u00b7 plant ${vin[10]} \u00b7 serial ${vin.slice(11)}</p>
+        <p class="sub">${wmiName(wmi)} · model year code ${vin[9]} → ${year}${yearInfo(vin).footnote ? ` <span class=\"year-note\">${yearInfo(vin).footnote}</span>` : ""} · plant ${vin[10]} · serial ${vin.slice(11)}</p>
         <div class="pill-row">
           <span class="pill">WMI ${wmi}</span>
           <span class="pill">Year ${year}</span>
@@ -411,11 +423,8 @@
     specs.classList.remove("hidden");
     specCards.innerHTML = "";
     allBody.innerHTML = "";
-
     const error = result.ErrorText || "";
-    nhtsaNote.textContent = error
-      ? `NHTSA vPIC \u2014 ${error}`
-      : "NHTSA Product Information Catalog (vPIC).";
+    setNhtsaNote(error);
 
     NHTSA_FIELDS.forEach(([key, label]) => {
       const value = (result[key] || "").trim();
@@ -458,12 +467,12 @@
       return;
     }
     if (!VIN_RE.test(vin)) {
-      setStatus("Invalid characters \u2014 I, O and Q are not allowed.", "bad");
+      setStatus("Invalid characters — I, O and Q are not allowed.", "bad");
       return;
     }
 
     renderLocal(vin);
-    setStatus("Structure decoded. Fetching NHTSA specs\u2026");
+    setStatus("Structure decoded. Fetching NHTSA specs…");
     decodeBtn.disabled = true;
     try {
       const row = await lookupNhtsa(vin);
@@ -484,8 +493,8 @@
           "The NHTSA request was blocked or offline. Local structure above is still valid. Serve this folder over http:// if you opened the file directly."
         )
       );
-      nhtsaNote.textContent = String(err.message || err);
-      setStatus("Local decode only \u2014 NHTSA lookup failed.", "bad");
+      setNhtsaNote(String(err.message || err));
+      setStatus("Local decode only — NHTSA lookup failed.", "bad");
     } finally {
       decodeBtn.disabled = false;
     }

@@ -219,6 +219,12 @@ h1 { margin: 0; font-size: 28px; letter-spacing: -0.03em; font-weight: 700; }
 .section-head { margin-bottom: 14px; }
 .section-head h2 { margin: 0; font-size: 18px; }
 .section-head p { margin: 4px 0 0; color: var(--muted); font-size: 14px; }
+.nhtsa-link {
+  color: var(--amber);
+  text-decoration: none;
+  border-bottom: 1px solid color-mix(in srgb, var(--amber) 45%, transparent);
+}
+.nhtsa-link:hover { border-bottom-color: var(--amber); }
 
 .anatomy-grid {
   display: grid;

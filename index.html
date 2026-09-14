@@ -17,7 +17,7 @@
       <span class="mark" aria-hidden="true"></span>
       <div>
         <p class="eyebrow">Vehicle identity</p>
-        <h1>VIN Decoder v0.3</h1>
+        <h1>VIN Decoder v0.4</h1>
       </div>
     </div>
     <p class="lede">Paste a 17-character VIN. Official specs come from NHTSA vPIC when the network allows it.</p>
@@ -58,6 +58,14 @@
 
     <section id="hero" class="hero hidden"></section>
 
+    <section id="tesla" class="panel tesla-panel hidden">
+      <div class="section-head">
+        <h2>Tesla reading</h2>
+        <p>Plant, line, battery and drive unit decoded from Tesla VIN rules.</p>
+      </div>
+      <div class="cards" id="tesla-cards"></div>
+    </section>
+
     <section id="anatomy" class="panel hidden">
       <div class="section-head">
         <h2>VIN anatomy</h2>
@@ -91,18 +99,10 @@
       </div>
     </section>
 
-    <section id="tesla" class="panel tesla-panel hidden">
-      <div class="section-head">
-        <h2>Tesla reading</h2>
-        <p>Plant, line, battery and drive unit decoded from Tesla VIN rules.</p>
-      </div>
-      <div class="cards" id="tesla-cards"></div>
-    </section>
-
     <section id="specs" class="panel hidden">
       <div class="section-head">
         <h2>Official specs</h2>
-        <p id="nhtsa-note">NHTSA Product Information Catalog (vPIC).</p>
+        <p id="nhtsa-note"><a class="nhtsa-link" href="https://vpic.nhtsa.dot.gov/api/" target="_blank" rel="noopener noreferrer">NHTSA vPIC</a> Product Information Catalog.</p>
       </div>
       <div class="cards" id="spec-cards"></div>
       <details class="more">
