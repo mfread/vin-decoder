@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>VIN Decoder</title>
+  <meta name="description" content="Decode any 17-character VIN locally and against NHTSA vPIC." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="bg-grid" aria-hidden="true"></div>
+  <header class="top">
+    <div class="brand">
+      <span class="mark" aria-hidden="true"></span>
+      <div>
+        <p class="eyebrow">Vehicle identity</p>
+        <h1>VIN Decoder</h1>
+      </div>
+    </div>
+    <p class="lede">Paste a 17-character VIN. Structure and check digit run locally. Official specs come from NHTSA vPIC when the network allows it.</p>
+  </header>
+
+  <main>
+    <section class="panel input-panel">
+      <label class="vin-label" for="vin">Vehicle identification number</label>
+      <div class="vin-row">
+        <input
+          id="vin"
+          name="vin"
+          type="text"
+          maxlength="17"
+          autocomplete="off"
+          spellcheck="false"
+          autocapitalize="characters"
+          placeholder="5YJYGDEE7LF055123"
+          aria-describedby="vin-hint"
+        />
+        <button type="button" id="decode" class="btn primary">Decode</button>
+      </div>
+      <div class="slots" id="slots" aria-hidden="true"></div>
+      <div class="meta-row">
+        <p id="vin-hint" class="hint">17 characters · letters I, O and Q are not used · check digit is position 9</p>
+        <p id="status" class="status" role="status"></p>
+      </div>
+      <div class="samples">
+        <span>Try</span>
+        <button type="button" class="chip" data-vin="5YJYGDEE7LF055123">2020 Model Y</button>
+        <button type="button" class="chip" data-vin="1FTFW1E58NFA00001">2022 F-150</button>
+        <button type="button" class="chip" data-vin="WVWZZZ3CZWE123456">VW Golf</button>
+        <button type="button" class="chip" data-vin="JN1AZ4EH8FM430000">2015 370Z</button>
+      </div>
+    </section>
+
+    <section id="hero" class="hero hidden"></section>
+
+    <section id="anatomy" class="panel hidden">
+      <div class="section-head">
+        <h2>VIN anatomy</h2>
+        <p>ISO 3779 layout. Hover a cell for the position meaning.</p>
+      </div>
+      <div class="anatomy-grid" id="anatomy-grid"></div>
+      <ul class="legend">
+        <li><span class="swatch wmi"></span>WMI 1–3 manufacturer</li>
+        <li><span class="swatch vds"></span>VDS 4–8 vehicle</li>
+        <li><span class="swatch chk"></span>Check 9</li>
+        <li><span class="swatch vis"></span>VIS 10–17 year · plant · serial</li>
+      </ul>
+    </section>
+
+    <section id="tesla" class="panel tesla-panel hidden">
+      <div class="section-head">
+        <h2>Tesla reading</h2>
+        <p>Plant, line, battery and drive unit decoded from Tesla VIN rules.</p>
+      </div>
+      <div class="cards" id="tesla-cards"></div>
+    </section>
+
+    <section id="specs" class="panel hidden">
+      <div class="section-head">
+        <h2>Official specs</h2>
+        <p id="nhtsa-note">NHTSA Product Information Catalog (vPIC).</p>
+      </div>
+      <div class="cards" id="spec-cards"></div>
+      <details class="more">
+        <summary>All returned fields</summary>
+        <div class="table-wrap">
+          <table id="all-fields">
+            <thead><tr><th>Field</th><th>Value</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </details>
+    </section>
+  </main>
+
+  <footer>
+    <p>Check digit uses 49 CFR 565. Local decode works offline. NHTSA data is manufacturer-reported and may be incomplete for some markets.</p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
