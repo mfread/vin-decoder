@@ -231,12 +231,26 @@
     return rem === 10 ? "X" : String(rem);
   }
 
-  function yearGuess(code) {
-    const pair = YEAR_CODES[code];
-    if (!pair) return "Unknown";
-    const now = new Date().getFullYear();
-    const later = pair.find((y) => y <= now + 1) ?? pair[0];
-    return later >= 2010 ? String(later) : `${pair[0]} or ${pair[1]}`;
+  function knownMake(vin) {
+    return isTesla(vin) || Boolean(WMI[vin.slice(0, 3)]);
+  }
+
+  function yearInfo(vin) {
+    const pair = YEAR_CODES[vin[9]];
+    if (!pair) return { year: "Unknown", footnote: "" };
+    const cap = new Date().getFullYear() + 1;
+    const opts = pair.filter((y) => y <= cap);
+    if (!opts.length) return { year: String(pair[0]), footnote: "" };
+    const year = String(opts[opts.length - 1]);
+    const prior = opts.length > 1 ? opts[0] : null;
+    const footnote = !knownMake(vin) && prior != null
+      ? `also ${prior} \u00b7 same letter on the previous 30-year cycle`
+      : "";
+    return { year, footnote };
+  }
+
+  function yearGuess(vin) {
+    return yearInfo(vin).year;
   }
 
   function wmiName(wmi) {
@@ -262,8 +276,14 @@
   function card(label, value) {
     const wrap = document.createElement("div");
     wrap.className = "card";
-    wrap.innerHTML = `<dt>${label}</dt><dd>${value || "—"}</dd>`;
+    wrap.innerHTML = `<dt>${label}</dt><dd>${value || "\u2014"}</dd>`;
     return wrap;
+  }
+
+  function yearLabel(vin) {
+    const info = yearInfo(vin);
+    if (!info.footnote) return info.year;
+    return `${info.year}<span class="year-note">${info.footnote}</span>`;
   }
 
   function pair(code, meaning) {
@@ -286,7 +306,7 @@
         return pair(ch, COUNTRY[ch] || "Region unknown");
       case 1:
       case 2:
-        return pair(ch, index === 2 ? wmiName(vin.slice(0, 3)) : wmiName(vin.slice(0, 3)).split(" —")[0]);
+        return pair(ch, index === 2 ? wmiName(vin.slice(0, 3)) : wmiName(vin.slice(0, 3)).split(" \u2014")[0]);
       case 3:
         return pair(ch, tesla ? TESLA_LINE[ch] : "Manufacturer line code");
       case 4:
@@ -300,10 +320,10 @@
       case 8: {
         const expected = checkDigit(vin);
         const ok = expected === ch;
-        return pair(ch, ok ? "Valid (49 CFR 565)" : `Mismatch — expected ${expected}`);
+        return pair(ch, ok ? "Valid (49 CFR 565)" : `Mismatch \u2014 expected ${expected}`);
       }
       case 9:
-        return pair(ch, yearGuess(ch));
+        return pair(ch, yearLabel(vin));
       case 10:
         return pair(ch, tesla ? (TESLA_PLANT[ch] || "Plant code") : "Assembly plant code");
       default:
@@ -322,7 +342,7 @@
     }
     const serial = document.createElement("tr");
     serial.className = "vis";
-    serial.innerHTML = `<td>12–17</td><td>${BREAKDOWN_LABEL[11]}</td><td>${positionMeaning(vin, 11)}</td>`;
+    serial.innerHTML = `<td>12\u201317</td><td>${BREAKDOWN_LABEL[11]}</td><td>${positionMeaning(vin, 11)}</td>`;
     breakdownBody.appendChild(serial);
   }
 
@@ -330,17 +350,17 @@
     const expected = checkDigit(vin);
     const valid = expected === vin[8];
     const wmi = vin.slice(0, 3);
-    const year = yearGuess(vin[9]);
+    const year = yearGuess(vin);
     const makeGuess = isTesla(vin)
       ? "Tesla"
-      : (WMI[wmi] || "").split("—")[0].split("(")[0].trim() || "See WMI";
+      : (WMI[wmi] || "").split("\u2014")[0].split("(")[0].trim() || "See WMI";
 
     hero.classList.remove("hidden");
     hero.innerHTML = `
       <article class="hero-card">
-        <p class="kicker">${wmi} · ${COUNTRY[vin[0]] || "Region unknown"}</p>
+        <p class="kicker">${wmi} \u00b7 ${COUNTRY[vin[0]] || "Region unknown"}</p>
         <h2>${makeGuess}${isTesla(vin) && TESLA_LINE[vin[3]] ? " " + TESLA_LINE[vin[3]] : ""}</h2>
-        <p class="sub">${wmiName(wmi)} · model year code ${vin[9]} → ${year} · plant ${vin[10]} · serial ${vin.slice(11)}</p>
+        <p class="sub">${wmiName(wmi)} \u00b7 model year code ${vin[9]} \u2192 ${year}${yearInfo(vin).footnote ? ` <span class=\"year-note\">${yearInfo(vin).footnote}</span>` : ""} \u00b7 plant ${vin[10]} \u00b7 serial ${vin.slice(11)}</p>
         <div class="pill-row">
           <span class="pill">WMI ${wmi}</span>
           <span class="pill">Year ${year}</span>
@@ -394,7 +414,7 @@
 
     const error = result.ErrorText || "";
     nhtsaNote.textContent = error
-      ? `NHTSA vPIC — ${error}`
+      ? `NHTSA vPIC \u2014 ${error}`
       : "NHTSA Product Information Catalog (vPIC).";
 
     NHTSA_FIELDS.forEach(([key, label]) => {
@@ -438,12 +458,12 @@
       return;
     }
     if (!VIN_RE.test(vin)) {
-      setStatus("Invalid characters — I, O and Q are not allowed.", "bad");
+      setStatus("Invalid characters \u2014 I, O and Q are not allowed.", "bad");
       return;
     }
 
     renderLocal(vin);
-    setStatus("Structure decoded. Fetching NHTSA specs…");
+    setStatus("Structure decoded. Fetching NHTSA specs\u2026");
     decodeBtn.disabled = true;
     try {
       const row = await lookupNhtsa(vin);
@@ -465,7 +485,7 @@
         )
       );
       nhtsaNote.textContent = String(err.message || err);
-      setStatus("Local decode only — NHTSA lookup failed.", "bad");
+      setStatus("Local decode only \u2014 NHTSA lookup failed.", "bad");
     } finally {
       decodeBtn.disabled = false;
     }

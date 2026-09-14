@@ -341,6 +341,14 @@ td:first-child { font-family: var(--mono); color: var(--muted); width: 42%; }
   color: var(--amber);
   margin-right: 8px;
 }
+.year-note {
+  display: block;
+  margin-top: 4px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--muted);
+}
+.hero .year-note { display: inline; margin: 0 0 0 6px; }
 
 .hidden { display: none; }
 footer { color: var(--muted); font-size: 13px; margin-top: 8px; }
