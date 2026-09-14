@@ -225,6 +225,11 @@ h1 { margin: 0; font-size: 28px; letter-spacing: -0.03em; font-weight: 700; }
   border-bottom: 1px solid color-mix(in srgb, var(--amber) 45%, transparent);
 }
 .nhtsa-link:hover { border-bottom-color: var(--amber); }
+.nhtsa-api-note {
+  display: block;
+  margin-top: 6px;
+  color: var(--muted);
+}
 
 .anatomy-grid {
   display: grid;

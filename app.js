@@ -219,13 +219,14 @@
   const VPIC_HREF = "https://vpic.nhtsa.dot.gov/api/";
 
   function nhtsaAnchor() {
-    return `<a class="nhtsa-link" href="${VPIC_HREF}" target="_blank" rel="noopener noreferrer">NHTSA vPIC</a>`;
+    return `<a class="nhtsa-link" href="${VPIC_HREF}" target="_blank" rel="noopener noreferrer">NHTSA vPIC API Documentation</a>`;
   }
 
   function setNhtsaNote(extra) {
-    nhtsaNote.innerHTML = extra
-      ? `${nhtsaAnchor()} — ${extra}`
-      : `${nhtsaAnchor()} Product Information Catalog.`;
+    const note = String(extra || "").trim();
+    nhtsaNote.innerHTML = note
+      ? `${nhtsaAnchor()}<span class="nhtsa-api-note">Note: ${note}</span>`
+      : nhtsaAnchor();
   }
 
   function normalize(value) {
@@ -423,8 +424,10 @@
     specs.classList.remove("hidden");
     specCards.innerHTML = "";
     allBody.innerHTML = "";
-    const error = result.ErrorText || "";
-    setNhtsaNote(error);
+    const code = String(result.ErrorCode || "").trim();
+    const text = String(result.ErrorText || "").trim();
+    const apiNote = (code && code !== "0") ? (text || code) : "";
+    setNhtsaNote(apiNote);
 
     NHTSA_FIELDS.forEach(([key, label]) => {
       const value = (result[key] || "").trim();
