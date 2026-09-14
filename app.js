@@ -91,6 +91,13 @@
     H: "Class D MPV / 5-door / RHD",
   };
 
+  const TESLA_RESTRAINT = {
+    A: "Type 2 belts FR / SR*3 / TR*2, front airbags, PODS, side + knee",
+    B: "Type 2 belts FR / SR*2 / TR*2, front airbags, PODS, side + knee",
+    C: "Type 2 belts FR / SR*3, front airbags, PODS, side",
+    D: "Type 2 belts FR / SR*3, front airbags, PODS, side + knee",
+  };
+
   const TESLA_FUEL = {
     E: "Electric (NCA / ternary Li-ion on many plants)",
     F: "Electric — LFP (lithium iron phosphate)",
@@ -139,6 +146,21 @@
     "Serial",
   ];
 
+  const BREAKDOWN_LABEL = [
+    "Country",
+    "Manufacturer",
+    "Division",
+    "Line",
+    "Body",
+    "Restraint",
+    "Engine",
+    "Drive",
+    "Check digit",
+    "Year",
+    "Plant",
+    "Serial",
+  ];
+
   const NHTSA_FIELDS = [
     ["Make", "Make"],
     ["Model", "Model"],
@@ -178,6 +200,8 @@
   const hero = document.getElementById("hero");
   const anatomy = document.getElementById("anatomy");
   const anatomyGrid = document.getElementById("anatomy-grid");
+  const breakdown = document.getElementById("breakdown");
+  const breakdownBody = document.querySelector("#breakdown-table tbody");
   const teslaPanel = document.getElementById("tesla");
   const teslaCards = document.getElementById("tesla-cards");
   const specs = document.getElementById("specs");
@@ -242,6 +266,66 @@
     return wrap;
   }
 
+  function pair(code, meaning) {
+    if (!meaning || meaning === code) return `<span class="code">${code}</span>`;
+    return `<span class="code">${code}</span>${meaning}`;
+  }
+
+  function rowGroup(index) {
+    if (index < 3) return "wmi";
+    if (index < 8) return "vds";
+    if (index === 8) return "chk";
+    return "vis";
+  }
+
+  function positionMeaning(vin, index) {
+    const ch = vin[index];
+    const tesla = isTesla(vin);
+    switch (index) {
+      case 0:
+        return pair(ch, COUNTRY[ch] || "Region unknown");
+      case 1:
+      case 2:
+        return pair(ch, index === 2 ? wmiName(vin.slice(0, 3)) : wmiName(vin.slice(0, 3)).split(" —")[0]);
+      case 3:
+        return pair(ch, tesla ? TESLA_LINE[ch] : "Manufacturer line code");
+      case 4:
+        return pair(ch, tesla ? TESLA_BODY[ch] : "Body / GVWR code");
+      case 5:
+        return pair(ch, tesla ? TESLA_RESTRAINT[ch] : "Restraint / series code");
+      case 6:
+        return pair(ch, tesla ? TESLA_FUEL[ch] : "Engine / fuel code");
+      case 7:
+        return pair(ch, tesla ? TESLA_DRIVE[ch] : "Drive / transmission code");
+      case 8: {
+        const expected = checkDigit(vin);
+        const ok = expected === ch;
+        return pair(ch, ok ? "Valid (49 CFR 565)" : `Mismatch — expected ${expected}`);
+      }
+      case 9:
+        return pair(ch, yearGuess(ch));
+      case 10:
+        return pair(ch, tesla ? (TESLA_PLANT[ch] || "Plant code") : "Assembly plant code");
+      default:
+        return pair(vin.slice(11), "Production sequence");
+    }
+  }
+
+  function renderBreakdown(vin) {
+    breakdown.classList.remove("hidden");
+    breakdownBody.innerHTML = "";
+    for (let i = 0; i < 11; i += 1) {
+      const tr = document.createElement("tr");
+      tr.className = rowGroup(i);
+      tr.innerHTML = `<td>${i + 1}</td><td>${BREAKDOWN_LABEL[i]}</td><td>${positionMeaning(vin, i)}</td>`;
+      breakdownBody.appendChild(tr);
+    }
+    const serial = document.createElement("tr");
+    serial.className = "vis";
+    serial.innerHTML = `<td>12–17</td><td>${BREAKDOWN_LABEL[11]}</td><td>${positionMeaning(vin, 11)}</td>`;
+    breakdownBody.appendChild(serial);
+  }
+
   function renderLocal(vin) {
     const expected = checkDigit(vin);
     const valid = expected === vin[8];
@@ -275,12 +359,13 @@
     anatomyGrid.innerHTML = "";
     [...vin].forEach((ch, i) => {
       const cell = document.createElement("div");
-      const group = i < 3 ? "wmi" : i < 8 ? "vds" : i === 8 ? "chk" : "vis";
-      cell.className = `cell ${group}`;
+      cell.className = `cell ${rowGroup(i)}`;
       cell.title = `Position ${i + 1}: ${POS_LABEL[i]}`;
       cell.innerHTML = `<span class="pos">${i + 1}</span><span class="ch">${ch}</span><span class="mean">${POS_LABEL[i]}</span>`;
       anatomyGrid.appendChild(cell);
     });
+
+    renderBreakdown(vin);
 
     if (isTesla(vin)) {
       teslaPanel.classList.remove("hidden");
@@ -347,6 +432,7 @@
       setStatus(`${vin.length} / 17 characters`, vin.length ? "bad" : "");
       hero.classList.add("hidden");
       anatomy.classList.add("hidden");
+      breakdown.classList.add("hidden");
       teslaPanel.classList.add("hidden");
       specs.classList.add("hidden");
       return;
