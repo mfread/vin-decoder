@@ -184,7 +184,7 @@
     ["PlantCity", "Plant city"],
     ["PlantState", "Plant state"],
     ["PlantCountry", "Plant country"],
-    ["Manufacturer", "Manufacturer"],
+    ["Manufacturer", "Manufactr"],
     ["SteeringLocation", "Steering"],
     ["Seats", "Seats"],
     ["SeatRows", "Seat rows"],
