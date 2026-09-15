@@ -225,7 +225,7 @@
   function setNhtsaNote(extra) {
     const note = String(extra || "").trim();
     nhtsaNote.innerHTML = note
-      ? `${nhtsaAnchor()}<span class="nhtsa-api-note">Note: ${note}</span>`
+      ? `${nhtsaAnchor()}<span class="nhtsa-api-note">Notes: ${note}</span>`
       : nhtsaAnchor();
   }
 
