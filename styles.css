@@ -324,7 +324,7 @@ td:first-child { font-family: var(--mono); color: var(--muted); width: 42%; }
 
 #breakdown-table {
   font-size: 14px;
-  table-layout: fixed;
+  table-layout: auto;
   width: 100%;
 }
 #breakdown-table th,
@@ -332,15 +332,19 @@ td:first-child { font-family: var(--mono); color: var(--muted); width: 42%; }
   vertical-align: top;
 }
 #breakdown-table th:nth-child(1),
+#breakdown-table td:nth-child(1),
+#breakdown-table th:nth-child(2),
+#breakdown-table td:nth-child(2) {
+  width: 1%;
+  white-space: nowrap;
+}
+#breakdown-table th:nth-child(1),
 #breakdown-table td:nth-child(1) {
-  width: 52px;
   font-family: var(--mono);
   color: var(--muted);
-  white-space: nowrap;
 }
 #breakdown-table th:nth-child(2),
 #breakdown-table td:nth-child(2) {
-  width: 118px;
   color: var(--muted);
   font-weight: 600;
   letter-spacing: 0.04em;
@@ -350,7 +354,6 @@ td:first-child { font-family: var(--mono); color: var(--muted); width: 42%; }
 #breakdown-table td:nth-child(3) {
   font-weight: 600;
   color: var(--text);
-  width: auto;
   white-space: normal;
   overflow-wrap: anywhere;
   word-break: break-word;
@@ -390,11 +393,8 @@ footer { color: var(--muted); font-size: 13px; margin-top: 8px; }
   #breakdown-table { font-size: 13px; }
   #breakdown-table th,
   #breakdown-table td { padding: 8px 6px; }
-  #breakdown-table th:nth-child(1),
-  #breakdown-table td:nth-child(1) { width: 28px; }
   #breakdown-table th:nth-child(2),
   #breakdown-table td:nth-child(2) {
-    width: 86px;
     letter-spacing: 0.02em;
     font-size: 10px;
   }
