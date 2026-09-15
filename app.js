@@ -148,7 +148,7 @@
 
   const BREAKDOWN_LABEL = [
     "Country",
-    "Manuf",
+    "Manufact",
     "Division",
     "Line",
     "Body",
