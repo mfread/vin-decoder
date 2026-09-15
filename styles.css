@@ -322,17 +322,25 @@ th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--lin
 th { color: var(--muted); font-weight: 600; }
 td:first-child { font-family: var(--mono); color: var(--muted); width: 42%; }
 
-#breakdown-table { font-size: 14px; }
+#breakdown-table {
+  font-size: 14px;
+  table-layout: fixed;
+  width: 100%;
+}
+#breakdown-table th,
+#breakdown-table td {
+  vertical-align: top;
+}
 #breakdown-table th:nth-child(1),
 #breakdown-table td:nth-child(1) {
-  width: 88px;
+  width: 52px;
   font-family: var(--mono);
   color: var(--muted);
   white-space: nowrap;
 }
 #breakdown-table th:nth-child(2),
 #breakdown-table td:nth-child(2) {
-  width: 160px;
+  width: 118px;
   color: var(--muted);
   font-weight: 600;
   letter-spacing: 0.04em;
@@ -342,6 +350,10 @@ td:first-child { font-family: var(--mono); color: var(--muted); width: 42%; }
 #breakdown-table td:nth-child(3) {
   font-weight: 600;
   color: var(--text);
+  width: auto;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 #breakdown-table tr.wmi td:nth-child(1) { color: var(--wmi); }
 #breakdown-table tr.vds td:nth-child(1) { color: var(--vds); }
@@ -365,12 +377,26 @@ td:first-child { font-family: var(--mono); color: var(--muted); width: 42%; }
 footer { color: var(--muted); font-size: 13px; margin-top: 8px; }
 
 @media (max-width: 760px) {
+  body { padding: 20px 12px 48px; }
+  .panel { padding: 16px 12px; }
   .vin-row { flex-direction: column; }
   .btn.primary { height: 48px; }
   .hero { grid-template-columns: 1fr; }
   .slots, .anatomy-grid { gap: 3px; }
   .cell .mean { display: none; }
   #vin { font-size: 16px; letter-spacing: 0.06em; }
+
+  .breakdown-wrap { overflow: visible; }
+  #breakdown-table { font-size: 13px; }
+  #breakdown-table th,
+  #breakdown-table td { padding: 8px 6px; }
+  #breakdown-table th:nth-child(1),
+  #breakdown-table td:nth-child(1) { width: 28px; }
   #breakdown-table th:nth-child(2),
-  #breakdown-table td:nth-child(2) { width: auto; }
+  #breakdown-table td:nth-child(2) {
+    width: 86px;
+    letter-spacing: 0.02em;
+    font-size: 10px;
+  }
+  #breakdown-table td:nth-child(3) { font-size: 13px; line-height: 1.35; }
 }
