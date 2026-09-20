@@ -8,13 +8,13 @@ Well suited for decoding Tesla VINs.
 ## What is a VIN?
 A Vehicle Identification Number (VIN) is used on almost all road-going vehicles, but it is not restricted strictly to cars. Different transport types use either standard 17-character VINs or industry-specific equivalent formats. 
 
-#####Where VINs are Used
+__Where VINs are Used__
 * Motorbikes & Scooters: Uses standard 17-character VINs (stamped on the frame, typically near the steering neck).
 * Trailers & Caravans: Uses standard 17-character VINs (stamped on the chassis or drawbar plate). 
 * Trucks & Buses: Uses standard 17-character VINs.
 * Mopeds & ATVs: Uses standard 17-character VINs.
 
-#####Exceptions & Equivalent Identifiers
+__Exceptions & Equivalent Identifiers__
 * Marine Craft (Boats, Jet Skis, Yachts): Do not use a VIN. Instead, watercraft use a Hull Identification Number (HIN). A HIN serves the same purpose as a VIN for registration and tracking, but follows a 12-character format stamped into the starboard side of the transom.
 * Aircraft: Uses a Tail Number (Registration Mark) combined with a manufacturer serial number.
 * Heavy Off-Road Equipment: Construction equipment or farm machinery often uses a Product Identification Number (PIN) or dedicated serial number rather than a standard road-vehicle VIN.
