@@ -25,4 +25,4 @@ Summary: If it goes on public roads (cars, motorbikes, caravans, trailers), it g
 This webapp is responsive so will work on any common device, including smartphones, tablets, laptops, and desktops - whether they are Apple, Android, Linux, Microsoft Windows etc.
 
 ## License
-Australian default copyright applies. Copyright Mark Read. You must ask permission to copy, modify, or republish. You may not commercialize my work.
+Copyright Mark Read (Australian default copyright applies). You must receive written permission from me before you can copy, modify, or republish any file. You may not commercialize my work.
