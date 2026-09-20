@@ -19,7 +19,7 @@ __Exceptions & Equivalent Identifiers__
 * Aircraft: Uses a Tail Number (Registration Mark) combined with a manufacturer serial number.
 * Heavy Off-Road Equipment: Construction equipment or farm machinery often uses a Product Identification Number (PIN) or dedicated serial number rather than a standard road-vehicle VIN.
 
-Summary: If it goes on public roads (cars, motorbikes, caravans, trailers), it gets a VIN. If it goes on the water, it gets a HIN. If it flies it gets a Tail Number.
+Summary: If it goes on public roads (cars, motorbikes, caravans, trailers), it gets a VIN. If it goes on the water it gets a HIN. If it flies it gets a Tail Number.
 
 ## Device Compatibility
 This webapp is responsive so will work on any common device, including smartphones, tablets, laptops, and desktops - whether they are Apple, Android, Linux, Microsoft Windows etc.
