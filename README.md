@@ -1,4 +1,4 @@
-## App Overview
+# App Overview
 This webapp decodes virtually any car's Vehicle Identification Number (VIN).
 Enter a 17 character VIN and click/tap on the Decode button.
 Scroll down to view the results.
@@ -24,5 +24,11 @@ Summary: If it goes on public roads (cars, motorbikes, caravans, trailers), it g
 ## Device Compatibility
 This webapp is responsive so will work on any common device, including smartphones, tablets, laptops, and desktops - whether they are Apple, Android, Linux, Microsoft Windows etc.
 
+## data security
+The VIN number your enter stays on your device and not on a central server somewhere.
+
 ## License
 Copyright Mark Read (Australian default copyright applies). You must receive written permission from me before you can copy, modify, or republish any file. You may not commercialize my work.
+
+# buying a new Tesla?
+Ordering a new Tesla? Receive a discount when using [my referral link](https://ts.la/mark194129)
